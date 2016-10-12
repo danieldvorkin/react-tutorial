@@ -9,21 +9,14 @@ var CommentForm = React.createClass({
     this.setState({text: e.target.value});
   },
   handleSubmit: function(e) {
-    // prevent typical action of refreshing
     e.preventDefault();
-    // Set the var author and text to the state of the form as well trim the fat (whitespace)
     var author = this.state.author.trim();
-    // Questionable: should we trim whitespace if its from the text input
     var text = this.state.text.trim();
 
-    // if either dont exist, return with an alert msg
     if(!text || !author) {
-      // Note! dont mess with the form state if error
-      alert("Missing either author or text input");
       return;
     }
 
-    // Set the form state to empty. very important
     this.props.onCommentSubmit({author: author, text: text});
     this.setState({author: '', text: ''})
   },
@@ -36,8 +29,7 @@ var CommentForm = React.createClass({
             type="text" 
             placeholder="Your name" 
             value={this.state.author} 
-            onChange={this.handleAuthorChange} 
-            ref="nameInput"
+            onChange={this.handleAuthorChange}
           />
         </div>
         <div className="form-group">
@@ -66,7 +58,7 @@ var Comment = React.createClass({
     var md = new Remarkable();
     
     return (
-      <div className="comment well">
+      <div className="comment well col-lg-12">
         <h4 className="commentAuthor">
           {this.props.author}:
           <hr/>
@@ -89,7 +81,7 @@ var CommentList = React.createClass({
       )  
     });
     return (
-      <div className="commentList">
+      <div className="commentList row">
         {commentNodes}
       </div>
     )
