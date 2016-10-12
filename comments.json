@@ -5,28 +5,8 @@
         "text": "Hey there!"
     },
     {
-        "id": 1420070400000,
-        "author": "Paul O’Shannessy",
-        "text": "React is *great*!"
-    },
-    {
-        "id": 1464988635157,
-        "author": "ben",
-        "text": "*abc*"
-    },
-    {
-        "id": 1464988636500,
-        "author": "ben",
-        "text": "*abc*"
-    },
-    {
-        "id": 1464988717637,
-        "author": "evil",
-        "text": "<a href=\"javascript:alert(1)\">alert(1)</a>"
-    },
-    {
-        "id": 1476220700074,
-        "author": "Daniel",
-        "text": "this is so dope"
+        "id": 1476243542208,
+        "author": "Daniel Dvorkin",
+        "text": "This is my first comment"
     }
 ]

@@ -1,9 +1,56 @@
 var CommentForm = React.createClass({
+  getInitialState: function(){
+    return { author: '', text: '' };
+  },
+  handleAuthorChange: function(e){
+    this.setState({author: e.target.value});
+  },
+  handleTextChange: function(e) {
+    this.setState({text: e.target.value});
+  },
+  handleSubmit: function(e) {
+    // prevent typical action of refreshing
+    e.preventDefault();
+    // Set the var author and text to the state of the form as well trim the fat (whitespace)
+    var author = this.state.author.trim();
+    // Questionable: should we trim whitespace if its from the text input
+    var text = this.state.text.trim();
+
+    // if either dont exist, return with an alert msg
+    if(!text || !author) {
+      // Note! dont mess with the form state if error
+      alert("Missing either author or text input");
+      return;
+    }
+
+    // Set the form state to empty. very important
+    this.props.onCommentSubmit({author: author, text: text});
+    this.setState({author: '', text: ''})
+  },
   render: function(){
     return (
-      <div className="commentForm">
-        Hello, world! I am a CommentForm
-      </div>
+      <form className="commentForm form-inline" onSubmit={this.handleSubmit} >
+        <div className="form-group">
+          <input 
+            className="form-control" 
+            type="text" 
+            placeholder="Your name" 
+            value={this.state.author} 
+            onChange={this.handleAuthorChange} 
+            ref="nameInput"
+          />
+        </div>
+        <div className="form-group">
+          <input 
+            className="form-control"  
+            type="text" 
+            placeholder="Say something.." 
+            value={this.state.text} 
+            onChange={this.handleTextChange} 
+          />
+        </div>
+        <input className="btn btn-default" type="submit" value="POST" />
+      </form>
     )
   }
 });
@@ -70,12 +117,33 @@ var CommentBox = React.createClass({
     this.loadCommentsFromServer();
     setInterval(this.loadCommentsFromServer, this.props.pollInterval);
   },
+  handleCommentSubmit: function(comment){
+    var comments = this.state.data;
+    comment.id = Date.now();
+    var newComments = comments.concat([comment]);
+    this.setState({data: newComments})
+
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      type: 'POST',
+      data: comment,
+      success: function(data){
+        this.setState({data: data});
+        $('html,body').animate({scrollTop: document.body.scrollHeight},"fast");
+      }.bind(this),
+      error: (function(xhr, status, err){
+        this.setState({data: comments});  
+        console.log(xhr, status, err.toString());
+      }).bind(this)
+    })
+  },
   render: function(){
     return (
       <div className="commentBox">
         <h1>Comments</h1>
         <CommentList data={this.state.data} />
-        <CommentForm />
+        <CommentForm onCommentSubmit={this.handleCommentSubmit} />
       </div>
     )
   }
